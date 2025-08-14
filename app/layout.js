@@ -21,6 +21,7 @@ export default async function RootLayout({ children }) {
     hasToRemoveScriptWrapper: true,
     allowTransactionlessInjection: true,
   })
+  const connected = newrelic.agent.collector.isConnected()
 
   return (
     <html>
@@ -46,6 +47,7 @@ export default async function RootLayout({ children }) {
       // object literal.
       dangerouslySetInnerHTML={{__html: browserTimingHeader}}
     />
+    <p>newrelic connected: {String(connected)}</p>
     </body>
     </html>
   )
