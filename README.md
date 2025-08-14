@@ -1,52 +1,29 @@
-<a href="https://opensource.newrelic.com/oss-category/#example-code"><picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/dark/Example_Code.png"><source media="(prefers-color-scheme: light)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Example_Code.png"><img alt="New Relic Open Source example project banner." src="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Example_Code.png"></picture></a>
+This is an example of an instrumented Next.js app using
+[App Router](https://nextjs.org/docs).
 
-# New Relic Node.js Examples
+## Overview
 
-This repository contains example applications and scripts that demonstrate functionality of the [New Relic Node.js Agent](https://github.com/newrelic/node-newrelic).
+This example application shows a list of users and provides a form for editing
+individual users. When editing a user's name, no error will occur. When editing
+a user's age, an error condition will be encountered.
 
-* [AI Monitoring](./ai-monitoring) - examples using supported 3rd party libraries to produce AI Monitoring (AIM) telemetry
-* [Logs in Context](./application-logging) - examples using logging libraries to demonstrate agent log decoration and forwarding of logs to New Relic
-* [Code Level Metrics](./code-level-metrics) - example demonstrating span attributes that help drive the [CodeStream](https://newrelic.com/codestream) integration
-* [Custom Instrumentation](./custom-instrumentation) - examples demonstrating the use of the [Node.js agent API](https://newrelic.github.io/node-newrelic/API.html)
-* [Elasticsearch](./elasticsearch) - example demonstrating elasticsearch with Node.js agent
-* [Error Fingerprinting](./error-fingerprinting) - example using [setErrorCallback](https://newrelic.github.io/node-newrelic/API.html#setErrorGroupCallback) and [noticeError](https://newrelic.github.io/node-newrelic/API.html#noticeError) to [group errors](https://docs.newrelic.com/docs/errors-inbox/errors-inbox/#error-groups) produced in Node.js applications
-* [ESM](./esm-app) - example demonstrating how to load the agent in an [ESM](https://nodejs.org/api/esm.html) application. It also demonstrates how to register custom instrumentation for an ESM package.
-* [GraphQL Dataloader](./graphql-koa-dataloader) - example using Apollo Server, koa and GraphQL dataloader
-* [Kafkajs](./kafkajs) - example demonstrating [kafkajs](https://kafka.js.org/) with the Node.js agent
-* [Knex](./knex) - example demonstrating knex with the Node.js agent
-* [Mock Infinite Tracing Server](./mock-infinite-tracing-server) - mock gRPC server to use to locally test [infinite tracing](https://docs.newrelic.com/docs/distributed-tracing/infinite-tracing/introduction-infinite-tracing/) with a Node.js applciation
-* [Nest](./nestjs) - examples demonstrating NestJS with the Node.js agent
-* [Next.js](./nextjs) - examples demonstrating Next.js with the Node.js agent
-* [Prisma](./prisma-app) - example demonstrating Prisma with the Node.js agent
-* [Sequelize](./sequelize-app) - example demonstrating sequelize with the Node.js agent
-* [Express](./simple-express-app) - example demonstrating express with the Node.js agent
-* [Source Maps](./source-maps) - typescript example using [--enable-source-maps](https://nodejs.org/dist/latest-v22.x/docs/api/cli.html#--enable-source-maps) to demonstrate proper stack traces the Node.js agent produces
+A few source files to pay particular attention to:
 
-## OpenTelemetry Bridge Examples
++ [next.config.js](./next.config.js): shows configuration necessary to get
+instrumentation for all of the libraries New Relic's Node.js agent supports.
++ [newrelic.js](./newrelic.js): shows how to enable application logging. This
+application forwards server-side logs via our instrumentation of the Pino logger.
++ [app/layout.js](app/layout.js): shows how to enable the browser agent.
++ [app/user/edit/[id]/page.js](app/user/edit/%5Bid%5D/page.js): shows how to
+handle errors on both the client and server. When updating a user's age, an
+error will be returned, presented in the client, and available in the New Relic
+dashboard.
 
-When the Node.js agent is configured for OpenTelemetry bridge mode, it can instrument all libraries OTel instruments.
+## Setup
 
-* [GCP Pub/Sub](./gcp-pubsub) - example demonstrating [Google Cloud Pub/Sub](https://cloud.google.com/pubsub) with the Node.js agent in OTel bridge mode
-* [GraphQL](./opentelemetry-graphql) - example demonstrating `apollo`, `express`, and namely `graphql` with the agent in OTel bridge mode
-* [Messaging](./opentelemetry-messaging) - consumer/producer example demonstrating `amqplib` with the agent in OTel bridge mode
-* [Web Example](./opentelemetry-example) - example demonstrating `knex`, `express`, and `fetch` in a simple web app with the agent in OTel bridge mode
+1. Copy [.env.sample](./.env.sample) to `.env`.
+2. Edit `.env` to add your New Relic app name and license key
+3. Build the application: `npm run build`
+3. Start the application: `npm start`.
+4. Browse the application: http://127.0.0.1:3000/
 
-## Contribute
-
-We encourage your contributions to improve New Relic Node.js Examples. Please keep in mind that when you submit your pull request, you'll need to sign the CLA via the click-through using CLA-Assistant. You only have to sign the CLA one time per project.
-
-If you have any questions, or to execute our corporate CLA (which is required if your contribution is on behalf of a company), drop us an email at opensource@newrelic.com.
-
-**A note about vulnerabilities**
-
-As noted in our [security policy](../../security/policy), New Relic is committed to the privacy and security of our customers and their data. We believe that providing coordinated disclosure by security researchers and engaging with the security community are important means to achieve our security goals.
-
-If you believe you have found a security vulnerability in this project or any of New Relic's products or websites, we welcome and greatly appreciate you reporting it to New Relic through [our bug bounty program](https://docs.newrelic.com/docs/security/security-privacy/information-security/report-security-vulnerabilities/).
-
-If you would like to contribute to this project, review [these guidelines](./CONTRIBUTING.md).
-
-To [all contributors](https://github.com/newrelic/newrelic-node-examples/graphs/contributors), we thank you!
-
-## License
-
-New Relic Node.js Examples is licensed under the [Apache 2.0](http://apache.org/licenses/LICENSE-2.0.txt) License.

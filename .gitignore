@@ -1,13 +1,5 @@
+.next/
+.env
+
+newrelic_agent.log
 node_modules
-*.log
-.idea
-dist
-**/*.log
-.DS_Store
-# For custom environment
-.env*
-# For GCP Cloud Run
-skaffold.yaml
-service.yaml
-# IDE
-.vscode
