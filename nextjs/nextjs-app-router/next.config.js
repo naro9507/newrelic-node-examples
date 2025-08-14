@@ -3,6 +3,7 @@
 const nrExternals = require('newrelic/load-externals')
 
 module.exports = {
+  output: 'standalone',
   // For use with Next 14 and earlier:
   experimental: {
     // Without this setting, the Next.js compilation step will routinely
