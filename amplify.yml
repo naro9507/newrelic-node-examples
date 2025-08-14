@@ -9,6 +9,9 @@ frontend:
         - env | grep -e NEW_RELIC_ >> .env.production
         - env | grep -e NODE_OPTIONS >> .env.production
         - npm run build
+    postBuild:
+      commands:
+        - node scripts/inject-newrelic.js
   artifacts:
     baseDirectory: .next
     files:
