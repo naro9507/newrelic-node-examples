@@ -1,4 +1,5 @@
 import logger from '../lib/logger'
+import newrelic from 'newrelic'
 
 export default function Index() {
   logger.info('rendering index page')
@@ -19,6 +20,11 @@ export default function Index() {
       <li>Clicking on a user goes to the user update page.</li>
       <li>Updating a user&apos;s first or last name will result in a successful transaction.</li>
       <li>Updating a user&apos;s age will demonstrate an error condition.</li>
+      <li>
+        <p>process.env.NEW_RELIC_APP_NAME: {process.env.NEW_RELIC_APP_NAME}</p>
+        <p>process.env.NEW_RELIC_LICENSE_KEY: {process.env.NEW_RELIC_LICENSE_KEY}</p>
+        <p>process.env.NODE_OPTIONS: {process.env.NODE_OPTIONS}</p>
+      </li>
     </ul>
   </div>
 }
