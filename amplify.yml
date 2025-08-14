@@ -7,6 +7,7 @@ frontend:
     build:
       commands:
         - env | grep -e NEW_RELIC_ >> .env.production
+        - env | grep -e NODE_OPTIONS >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next
