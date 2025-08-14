@@ -1,0 +1,19 @@
+version: 1
+frontend:
+  buildPath: "nextjs/nextjs-app-router"
+  phases:
+    preBuild:
+      commands:
+        - npm install
+    build:
+      commands:
+        - env | grep -e NEW_RELIC_ >> .env.production
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - nextjs/nextjs-app-router/node_modules/**/*
+      - nextjs/nextjs-app-router/.next/cache/**/*
