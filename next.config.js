@@ -3,9 +3,9 @@
 const nrExternals = require('newrelic/load-externals')
 
 module.exports = {
+  output: 'standalone',
   // For use with Next 14 and earlier:
   experimental: {
-    instrumentationHook: true,
     // Without this setting, the Next.js compilation step will routinely
     // try to import files such as `LICENSE` from the `newrelic` module.
     // See https://nextjs.org/docs/app/api-reference/next-config-js/serverComponentsExternalPackages.
@@ -20,16 +20,16 @@ module.exports = {
   // In order for newrelic to effectively instrument a Next.js application,
   // the modules that newrelic supports should not be mangled by webpack. Thus,
   // we need to "externalize" all of the modules that newrelic supports.
-  webpack: (config) => {
-    nrExternals(config)
-    return config
-  }
+  // webpack: (config) => {
+  //   nrExternals(config)
+  //   return config
+  // }
   
   // Turbopack: NextJs offers the Turbopack incremental bundler as a replacement for webpack. 
   // Its configuration requires a minimal change: 
   //
-  // turbopack: (config) => {
-  //   nrExternals(config)
-  //   return config
-  // }
+  turbopack: (config) => {
+    nrExternals(config)
+    return config
+  }
 }
