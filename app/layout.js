@@ -1,6 +1,7 @@
 // This file defines the overall layout of all pages in the application.
 // The default function exported from this module must return a document with
 // `html` and `body` tags. A `head` tag will be ignored.
+export const runtime = 'nodejs';
 
 import Script from 'next/script'
 import Link from 'next/link'
