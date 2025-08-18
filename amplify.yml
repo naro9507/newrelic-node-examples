@@ -8,6 +8,7 @@ frontend:
       commands:
         - env | grep -e NEW_RELIC_ >> .env.production
         - env | grep -e NODE_OPTIONS >> .env.production
+        - cp .amplify-hosting/deploy-manifest.json .amplify-hosting/deploy-manifest.json
 
         - npm run build
         - node scripts/inject-newrelic.js
