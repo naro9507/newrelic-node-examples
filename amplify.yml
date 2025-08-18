@@ -3,7 +3,7 @@ frontend:
   phases:
     build:
       commands:
-        - echo "bootstrap"
+        - npm install --prefix .amplify-hosting/compute/default
   artifacts:
     baseDirectory: .amplify-hosting
     files:
