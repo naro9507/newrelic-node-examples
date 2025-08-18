@@ -1,23 +1,18 @@
 version: 1
 applications:
-  - appRoot: .
+  - appRoot: deploy
     frontend:
       phases:
         preBuild:
           commands:
-            - nvm install 18
-            - nvm use 18
-            - npm ci
+            - nvm install 18 && nvm use 18
+            - npm ci --prefix ..
         build:
           commands:
             - |
-              set -euo pipefail
-              # 環境変数を必要なら吐き出す
-              env | grep -e NEW_RELIC_ >> .env.production || true
-              env | grep -e NODE_OPTIONS >> .env.production || true
-              # Next を build（standalone 必須）
+              set -e
+              cd ..
               npm run build
-              # アーティファクトを組み立て
               rm -rf .amplify-hosting
               mkdir -p .amplify-hosting/compute/default .amplify-hosting/static/_next/static
               cp -r .next/standalone/* .amplify-hosting/compute/default/
@@ -25,10 +20,9 @@ applications:
               [ -d .next/static ] && cp -r .next/static/* .amplify-hosting/static/_next/static/
               cp deploy-manifest.json .amplify-hosting/
       artifacts:
-        baseDirectory: .amplify-hosting
-        files:
-          - "**/*"
+        baseDirectory: ../.amplify-hosting
+        files: ["**/*"]
       cache:
         paths:
-          - node_modules/**/*
-          - .next/cache/**/*
+          - ../node_modules/**/*
+          - ../.next/cache/**/*
