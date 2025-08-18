@@ -17,7 +17,7 @@ applications:
               cp -r .next/standalone/* deploy/.amplify-hosting/compute/default/
               [ -d public ] && cp -r public deploy/.amplify-hosting/compute/default/public
               [ -d .next/static ] && cp -r .next/static/* deploy/.amplify-hosting/static/_next/static/
-              cp deploy-manifest.json deploy/.amplify-hosting/
+              cp deploy/deploy-manifest.json deploy/.amplify-hosting/
       artifacts:
         baseDirectory: .amplify-hosting
         files: ["**/*"]
