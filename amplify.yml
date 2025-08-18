@@ -16,8 +16,8 @@ frontend:
         - mkdir -p .amplify-hosting/compute/default
         - mkdir -p .amplify-hosting/static
         - cp -r .next/standalone/* .amplify-hosting/compute/default/
-        - if [ -d public ]; then cp -r public .amplify-hosting/compute/default/public; fi
         - cp -r .next/static/* .amplify-hosting/static/
+        - if [ -d public ]; then cp -r public .amplify-hosting/compute/default/public; fi
   artifacts:
     baseDirectory: .amplify-hosting
     files:
