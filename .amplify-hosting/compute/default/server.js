@@ -1,11 +1,9 @@
 try {
-  if (process.env.NEW_RELIC_LICENSE_KEY) {
-    process.env.NEW_RELIC_NO_CONFIG_FILE = process.env.NEW_RELIC_NO_CONFIG_FILE || 'true';
-    require('newrelic');
-    console.log('[bootstrap] newrelic loaded');
-  } else {
-    console.log('[bootstrap] NEW_RELIC_LICENSE_KEY not set; skipping agent');
-  }
+  process.env.NEW_RELIC_APP_NAME = process.env.NEW_RELIC_APP_NAME || 'aws-spike-web';
+  process.env.NEW_RELIC_LICENSE_KEY = process.env.NEW_RELIC_LICENSE_KEY || 'f4b6bef32bb7a52ab4d702b841da4c49FFFFNRAL';
+  process.env.NEW_RELIC_NO_CONFIG_FILE = process.env.NEW_RELIC_NO_CONFIG_FILE || 'true';
+  require('newrelic');
+  console.log('[bootstrap] newrelic loaded');
 } catch (e) {
   console.error('[bootstrap] newrelic load failed:', e && e.message);
 }
