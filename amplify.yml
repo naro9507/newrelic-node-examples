@@ -1,27 +1,10 @@
 version: 1
-applications:
-  - appRoot: deploy
-    frontend:
-      phases:
-        preBuild:
-          commands:
-            - nvm install 18 && nvm use 18
-            - npm ci --prefix ..
-        build:
-          commands:
-            - |
-              set -e
-              cd ..
-              npm run build
-              mkdir -p deploy/.amplify-hosting/compute/default deploy/.amplify-hosting/static/_next/static
-              cp -r .next/standalone/* deploy/.amplify-hosting/compute/default/
-              [ -d public ] && cp -r public deploy/.amplify-hosting/compute/default/public
-              [ -d .next/static ] && cp -r .next/static/* deploy/.amplify-hosting/static/_next/static/
-              cp deploy/deploy-manifest.json deploy/.amplify-hosting/
-      artifacts:
-        baseDirectory: .amplify-hosting
-        files: ["**/*"]
-      cache:
-        paths:
-          - node_modules/**/*
-          - .next/cache/**/*
+frontend:
+  phases:
+    build:
+      commands:
+        - echo "bootstrap"
+  artifacts:
+    baseDirectory: .
+    files:
+      - "**/*"
