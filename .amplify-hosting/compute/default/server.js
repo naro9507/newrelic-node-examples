@@ -1,5 +1,6 @@
 try {
   if (process.env.NEW_RELIC_LICENSE_KEY) {
+    process.env.NEW_RELIC_NO_CONFIG_FILE = process.env.NEW_RELIC_NO_CONFIG_FILE || 'true';
     require('newrelic');
     console.log('[bootstrap] newrelic loaded');
   } else {
