@@ -9,6 +9,7 @@ frontend:
         - env | grep -e NEW_RELIC_ >> .env.production
         - env | grep -e NODE_OPTIONS >> .env.production
         - npm run build
+        - mkdir -p .amplify-hosting/compute/default
         - cp -r .next/standalone .amplify-hosting/compute/default
         - cp -r .next/static .amplify-hosting
   artifacts:
