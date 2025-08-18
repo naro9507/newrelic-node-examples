@@ -5,7 +5,7 @@ frontend:
       commands:
         - nvm install 18
         - nvm use 18
-        - npm ci
+        - npm install
     build:
       commands:
         - env | grep -e NEW_RELIC_ >> .env.production
