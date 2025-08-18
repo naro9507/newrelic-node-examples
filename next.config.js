@@ -7,7 +7,6 @@ module.exports = {
   output: 'standalone',
   // For use with Next 14 and earlier:
   experimental: {
-    instrumentationHook: true,
     // Without this setting, the Next.js compilation step will routinely
     // try to import files such as `LICENSE` from the `newrelic` module.
     // See https://nextjs.org/docs/app/api-reference/next-config-js/serverComponentsExternalPackages.
