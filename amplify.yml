@@ -3,47 +3,56 @@ frontend:
   phases:
     preBuild:
       commands:
-        - nvm install 18
-        - nvm use 18
-        - npm ci
+        - |
+          set -e
+          nvm install 18
+          nvm use 18
+          npm ci
     build:
       commands:
-        # 0) 可視化＆安全
-        - set -x
-        - env | grep -e NEW_RELIC_ >> .env.production || true
-        - env | grep -e NODE_OPTIONS >> .env.production || true
+        - |
+          set -e
+          # 0) 環境変数を書き出す（ヒットしなくてもOKに）
+          env | grep -e NEW_RELIC_ >> .env.production || true
+          env | grep -e NODE_OPTIONS >> .env.production || true
 
-        # 1) Next をビルド（standalone 必須）
-        - npm run build
-        - test -f .next/standalone/server.js || (echo "ERROR: .next/standalone/server.js がありません。next.config.js に output:'standalone' を設定してください" && exit 1)
+          # 1) Next をビルド（standalone 必須）
+          npm run build
+          test -f .next/standalone/server.js || (echo "ERROR: .next/standalone/server.js がありません。next.config.js に output:'standalone' を設定してください" && exit 1)
 
-        # 2) 任意: New Relic 注入（失敗しても続行）
-        - node scripts/inject-newrelic.js || true
+          # 2) 任意: New Relic 注入（失敗しても続行）
+          node scripts/inject-newrelic.js || true
 
-        # 3) 最終アーティファクトを作成
-        - rm -rf .amplify-hosting
-        - mkdir -p .amplify-hosting/compute/default
-        - mkdir -p .amplify-hosting/static/_next/static
+          # 3) 最終アーティファクトを組み立て
+          rm -rf .amplify-hosting
+          mkdir -p .amplify-hosting/compute/default
+          mkdir -p .amplify-hosting/static/_next/static
 
-        # 4) compute: standalone の「中身」を default 直下へ（server.js が直下に来ることが重要）
-        - cp -r .next/standalone/* .amplify-hosting/compute/default/
-        - if [ -d public ]; then cp -r public .amplify-hosting/compute/default/public; fi
-        # 5) static: .next/static → static/_next/static へ
-        - if [ -d .next/static ]; then cp -r .next/static/* .amplify-hosting/static/_next/static/; fi
+          # 4) compute: standalone の“中身”を default 直下へ（server.js が直下に来ること）
+          cp -r .next/standalone/* .amplify-hosting/compute/default/
+          [ -d public ] && cp -r public .amplify-hosting/compute/default/public
 
-        # 6) manifest を“成果物側”へコピー（repo ルートにある想定）
-        - if [ -f deploy-manifest.json ]; then cp deploy-manifest.json .amplify-hosting/; else echo "ERROR: repo ルートに deploy-manifest.json がありません" && exit 1; fi
-        # 7) runtime で必要なら newrelic.js も同梱
-        - if [ -f newrelic.js ]; then cp newrelic.js .amplify-hosting/compute/default/; fi
+          # 5) static: .next/static → static/_next/static へ
+          [ -d .next/static ] && cp -r .next/static/* .amplify-hosting/static/_next/static/
 
-        # 8) 最終チェック（無ければ即エラー）
-        - test -f .amplify-hosting/deploy-manifest.json || (echo "ERROR: artifacts に manifest がありません" && exit 1)
-        - test -f .amplify-hosting/compute/default/server.js || (echo "ERROR: compute/default に server.js がありません" && exit 1)
+          # 6) manifest を成果物側へ（repo ルートに置いている想定）
+          if [ -f deploy-manifest.json ]; then
+            cp deploy-manifest.json .amplify-hosting/
+          else
+            echo "ERROR: repo ルートに deploy-manifest.json がありません" && exit 1
+          fi
 
-        # 9) デバッグ出力
-        - echo "== manifest ==" && cat .amplify-hosting/deploy-manifest.json
-        - echo "== compute/default ==" && ls -la .amplify-hosting/compute/default | sed -n '1,200p'
-        - echo "== static tree ==" && find .amplify-hosting/static -maxdepth 3 -type d | sed -n '1,200p'
+          # 7) runtime で必要なら newrelic.js も同梱
+          [ -f newrelic.js ] && cp newrelic.js .amplify-hosting/compute/default/
+
+          # 8) 最終チェック
+          test -f .amplify-hosting/deploy-manifest.json || (echo "ERROR: artifacts に manifest がありません" && exit 1)
+          test -f .amplify-hosting/compute/default/server.js || (echo "ERROR: compute/default に server.js がありません" && exit 1)
+
+          # 9) デバッグ出力
+          echo "== manifest ==" && cat .amplify-hosting/deploy-manifest.json
+          echo "== compute/default ==" && ls -la .amplify-hosting/compute/default | sed -n '1,200p'
+          echo "== static tree ==" && find .amplify-hosting/static -maxdepth 3 -type d | sed -n '1,200p'
   artifacts:
     baseDirectory: .amplify-hosting
     files:
