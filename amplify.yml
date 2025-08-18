@@ -18,20 +18,6 @@ frontend:
         - cp -r .next/standalone/* .amplify-hosting/compute/default/
         - if [ -d public ]; then cp -r public .amplify-hosting/compute/default/public; fi
         - cp -r .next/static/* .amplify-hosting/static/
-        - |
-          cat > .amplify-hosting/deploy-manifest.json << 'JSON'
-          {
-            "version": 1,
-            "framework": { "name": "custom-server", "version": "1.0.0" },
-            "routes": [
-              { "path": "/*.*", "target": { "kind": "Static" }, "fallback": { "kind": "Compute", "src": "default" } },
-              { "path": "/*",   "target": { "kind": "Compute", "src": "default" } }
-            ],
-            "computeResources": [
-              { "name": "default", "runtime": "nodejs18.x", "entrypoint": "server.js" }
-            ]
-          }
-          JSON
   artifacts:
     baseDirectory: .amplify-hosting
     files:
