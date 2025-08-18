@@ -5,6 +5,6 @@ frontend:
       commands:
         - echo "bootstrap"
   artifacts:
-    baseDirectory: .
+    baseDirectory: .amplify-hosting
     files:
       - "**/*"
