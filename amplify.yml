@@ -17,7 +17,7 @@ frontend:
         - mkdir -p .amplify-hosting/static
         - cp -r .next/standalone/* .amplify-hosting/compute/default/
         - if [ -d public ]; then cp -r public .amplify-hosting/compute/default/public; fi
-        - cp -r .next/static .amplify-hosting/static/
+        - cp -r .next/static/* .amplify-hosting/static/
         - |
           cat > .amplify-hosting/deploy-manifest.json << 'JSON'
           {
