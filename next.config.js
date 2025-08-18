@@ -25,12 +25,6 @@ module.exports = {
   webpack: (config, { isServer }) => {
     nrExternals(config)
 
-    if (isServer) {
-      config.externals = config.externals || [];
-      if (!config.externals.includes('newrelic')) {
-        config.externals.push('newrelic');
-      }
-    }
     return config
   }
   
