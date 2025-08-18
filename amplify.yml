@@ -3,24 +3,25 @@ frontend:
   phases:
     preBuild:
       commands:
-        - |
-          npm install
+        - npm install
     build:
       commands:
         - |
-          set -e
-          # 0) 環境変数を書き出す（ヒットしなくてもOKに）
+          set -euo pipefail
+          set -x
+
+          # 0) 環境変数の書き出し（ヒットしなくても成功にする）
           env | grep -e NEW_RELIC_ >> .env.production || true
           env | grep -e NODE_OPTIONS >> .env.production || true
 
           # 1) Next をビルド（standalone 必須）
           npm run build
-          test -f .next/standalone/server.js || (echo "ERROR: .next/standalone/server.js がありません。next.config.js に output:'standalone' を設定してください" && exit 1)
+          test -f .next/standalone/server.js || { echo "ERROR: .next/standalone/server.js がありません。next.config.js に output:'standalone' を設定してください"; exit 1; }
 
-          # 2) 任意: New Relic 注入（失敗しても続行）
+          # 2) NR の注入（失敗しても続行）
           node scripts/inject-newrelic.js || true
 
-          # 3) 最終アーティファクトを組み立て
+          # 3) 最終アーティファクトを組み立て（ここからが配布物）
           rm -rf .amplify-hosting
           mkdir -p .amplify-hosting/compute/default
           mkdir -p .amplify-hosting/static/_next/static
@@ -32,21 +33,21 @@ frontend:
           # 5) static: .next/static → static/_next/static へ
           [ -d .next/static ] && cp -r .next/static/* .amplify-hosting/static/_next/static/
 
-          # 6) manifest を成果物側へ（repo ルートに置いている想定）
+          # 6) manifest を“成果物側”へ（repo ルートにある想定）
           if [ -f deploy-manifest.json ]; then
             cp deploy-manifest.json .amplify-hosting/
           else
-            echo "ERROR: repo ルートに deploy-manifest.json がありません" && exit 1
+            echo "ERROR: repo ルートに deploy-manifest.json がありません"; exit 1;
           fi
 
-          # 7) runtime で必要なら newrelic.js も同梱
+          # 7) Runtime で必要なら newrelic.js も compute に同梱
           [ -f newrelic.js ] && cp newrelic.js .amplify-hosting/compute/default/
 
-          # 8) 最終チェック
-          test -f .amplify-hosting/deploy-manifest.json || (echo "ERROR: artifacts に manifest がありません" && exit 1)
-          test -f .amplify-hosting/compute/default/server.js || (echo "ERROR: compute/default に server.js がありません" && exit 1)
+          # 8) 最終チェック（無ければ即エラー）
+          test -f .amplify-hosting/deploy-manifest.json || { echo "ERROR: artifacts に manifest がありません"; exit 1; }
+          test -f .amplify-hosting/compute/default/server.js || { echo "ERROR: compute/default に server.js がありません"; exit 1; }
 
-          # 9) デバッグ出力
+          # 9) デバッグ出力（ログで確認用）
           echo "== manifest ==" && cat .amplify-hosting/deploy-manifest.json
           echo "== compute/default ==" && ls -la .amplify-hosting/compute/default | sed -n '1,200p'
           echo "== static tree ==" && find .amplify-hosting/static -maxdepth 3 -type d | sed -n '1,200p'
