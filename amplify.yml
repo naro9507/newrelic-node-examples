@@ -4,10 +4,7 @@ frontend:
     preBuild:
       commands:
         - |
-          set -e
-          nvm install 18
-          nvm use 18
-          npm ci
+          npm install
     build:
       commands:
         - |
