@@ -1,4 +1,14 @@
-require('newrelic')
+try {
+  if (process.env.NEW_RELIC_LICENSE_KEY) {
+    require('newrelic');
+    console.log('[bootstrap] newrelic loaded');
+  } else {
+    console.log('[bootstrap] NEW_RELIC_LICENSE_KEY not set; skipping agent');
+  }
+} catch (e) {
+  console.error('[bootstrap] newrelic load failed:', e && e.message);
+}
+
 const path = require('path')
 
 const dir = path.join(__dirname)
